@@ -1,4 +1,5 @@
 (defproject financeiro "0.1.0-SNAPSHOT"
+  :uberjar-name "financeiro.jar"
   :description "API de Controle Financeiro"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
