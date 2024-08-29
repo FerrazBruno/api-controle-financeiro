@@ -3,25 +3,25 @@
             [financeiro.transacoes :refer :all]))
 
 
-(fact "Uma transacao sem valor nao eh valida"
+(fact "Uma transação sem valor não é válida"
       (valida? {:tipo "receita"}) => false)
 
 
-(fact "Uma transacao com valor negatiov nao eh valida"
+(fact "Uma transação com valor negatio não é válida"
       (valida? {:valor -100 :tipo "receita"}) => false)
 
 
-(fact "Uma transacao com valor nao numerico nao eh valida"
+(fact "Uma transação com valor não numérico não é válida"
       (valida? {:valor "mil" :tipo "receita"}) => false)
 
 
-(fact "Uma transacao sem tipo nao eh valida"
+(fact "Uma transação sem tipo não é válida"
       (valida? {:valor 90}) => false)
 
 
-(fact "Uma transacao com tipo desconhecido nao eh valida"
+(fact "Uma transação com tipo desconhecido não é válida"
       (valida? {:valor 8 :tipo "investimento"}) => false)
 
 
-(fact "Uma transacao com valor numerico positivo e com tipo conhecido eh valida"
+(fact "Uma transação com valor numérico positivo e com tipo conhecido é válida"
       (valida? {:valor 230 :tipo "receita"}) => true)
