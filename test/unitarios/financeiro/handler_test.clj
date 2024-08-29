@@ -77,3 +77,25 @@
                                    (:status resposta) => 200
                                    (:body resposta) => (json/generate-string {:transacoes '({:id 1 :valor 2000 :tipo "receita"}
                                                                                             {:id 2 :valor 89 :tipo "despesa"})})))))
+
+
+(facts "Filtra transações por parâmetros de busca na URL"
+       (def livro {:id 1 :valor 88 :tipo "despesa" :rotulos ["livro" "educacao"]})
+       (def curso {:id 2 :valor 106 :tipo "despesa" :rotulos ["curso" "educacao"]})
+       (def salario {:id 3 :valor 8000 :tipo "receita" :rotulos ["salario"]})
+
+
+       (against-background [(db/transacoes-com-filtro {:rotulos ["livro" "curso"]}) => [livro curso]
+                            (db/transacoes-com-filtro {:rotulos "salario"}) => [salario]]
+
+
+                           (fact "Filtro múltiplos rótulos"
+                                 (let [resposta (app (mock/request :get "/transacoes?rotulos=livro&rotulos=curso"))]
+                                   (:status resposta) => 200
+                                   (:body resposta) => (json/generate-string {:transacoes [livro curso]})))
+
+
+                           (fact "Filtro com um único rótulo"
+                                 (let [resposta (app (mock/request :get "/transacoes?rotulos=salario"))]
+                                   (:status resposta) => 200
+                                   (:body resposta) => (json/generate-string {:transacoes [salario]})))))
