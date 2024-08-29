@@ -52,3 +52,28 @@
 
          (fact "o texto do corpo é um JSON com o conteúdo enviado e um id"
                (:body response) => "{\"id\":1,\"valor\":10,\"tipo\":\"receita\"}")))
+
+
+(facts "Existe rota para lidar com filtro de transação por tipo"
+       (against-background [(db/transacoes-do-tipo "receita") => '({:id 1 :valor 2000 :tipo "receita"})
+                            (db/transacoes-do-tipo "despesa") => '({:id 2 :valor 89 :tipo "despesa"})
+                            (db/transacoes) => '({:id 1 :valor 2000 :tipo "receita"} {:id 2 :valor 89 :tipo "despesa"})]
+
+
+                           (fact "Filtro por receita"
+                                 (let [resposta (app (mock/request :get "/receitas"))]
+                                   (:status resposta) => 200
+                                   (:body resposta) => (json/generate-string {:transacoes '({:id 1 :valor 2000 :tipo "receita"})})))
+
+
+                           (fact "Filtro por despesa"
+                                 (let [resposta (app (mock/request :get "/despesas"))]
+                                   (:status resposta) => 200
+                                   (:body resposta) => (json/generate-string {:transacoes '({:id 2 :valor 89 :tipo "despesa"})})))
+
+
+                           (fact "Sem filtro"
+                                 (let [resposta (app (mock/request :get "/transacoes"))]
+                                   (:status resposta) => 200
+                                   (:body resposta) => (json/generate-string {:transacoes '({:id 1 :valor 2000 :tipo "receita"}
+                                                                                            {:id 2 :valor 89 :tipo "despesa"})})))))

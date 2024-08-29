@@ -71,3 +71,6 @@ clj꞉financeiro.handler꞉> 
 clj꞉financeiro.transacoes꞉> 
 false
 clj꞉financeiro.transacoes꞉> 
+(= () '())
+true
+clj꞉financeiro.transacoes꞉> 
